@@ -7,27 +7,21 @@
 //
 
 import Foundation
+import RxSwift
+import RxCocoa
+
 
 protocol NewsViewModelProtocol {
-    var articles:[Article]?{
-        get set
-    }
-    
-    var searchedArticles :[Article]? { get set }
-    var error :String? {get set }
-    var bindNewsToView:(()->()){get set}
-    var bindErrorToView:(()->()) {get set }
-    var resultOfSearch:(()->()){get set }
-    
+    //driver
+    var dataObservable:Driver<[Article]>{get}
+    func getNewsList(page:Int)
 }
 class NewsViewModel :NewsViewModelProtocol {
     
+    var dataObservable: Driver<[Article]>
+    private var dataSubject = PublishSubject<[Article]>()
     private var networkService :NetworkServiceProtocol
-    var articles:[Article]?{
-        didSet {
-            self.bindNewsToView()
-        }
-    }
+    var articles:[Article]?
     var searchedArticles :[Article]?{
         didSet {
             self.resultOfSearch()
@@ -44,10 +38,12 @@ class NewsViewModel :NewsViewModelProtocol {
     
     init(networkService :NetworkServiceProtocol = NetworkService()) {
         self.networkService = networkService
-        
+        dataObservable = dataSubject.asDriver(onErrorJustReturn: articles ?? [])
+
+        getNewsList(page: 1)
     }
-    
     func getNewsList(page:Int){
+        print("-------")
         networkService.getNews(page: page){[weak self]
             (articles,error) in
             if let error:Error = error {
@@ -56,8 +52,12 @@ class NewsViewModel :NewsViewModelProtocol {
             }else {
                 if let articles = articles {
                     self?.articles = articles
+                    self?.dataSubject.onNext((self?.articles)!)
+
+                    print("get List")
+                    print(articles.count)
                 }
-                
+              
             }
         }
         

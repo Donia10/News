@@ -89,10 +89,6 @@
                                         </connections>
                                     </tableViewCell>
                                 </prototypes>
-                                <connections>
-                                    <outlet property="dataSource" destination="BYZ-38-t0r" id="u5J-vT-wpX"/>
-                                    <outlet property="delegate" destination="BYZ-38-t0r" id="8W3-A0-GM5"/>
-                                </connections>
                             </tableView>
                             <searchBar clipsSubviews="YES" contentMode="redraw" searchBarStyle="minimal" text="" translatesAutoresizingMaskIntoConstraints="NO" id="bls-3c-tIi">
                                 <rect key="frame" x="8" y="90" width="398" height="56"/>
