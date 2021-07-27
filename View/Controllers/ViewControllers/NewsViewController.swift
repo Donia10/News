@@ -158,7 +158,7 @@ extension NewsViewController:UISearchBarDelegate{
                 self?.articles.append(article)
                 
             }
-            print("articlesCount search =\(self?.articles.count)")
+            print("articlesCount search =\(self?.articles.count ?? 0)")
             self?.newsTableView.reloadData()
             
         }
